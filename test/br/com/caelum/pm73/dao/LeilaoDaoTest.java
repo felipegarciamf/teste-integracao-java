@@ -1,7 +1,10 @@
 package br.com.caelum.pm73.dao;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 import org.hibernate.Session;
 import org.junit.After;
@@ -47,6 +50,77 @@ public class LeilaoDaoTest {
 		Long total = leilaoDao.total();
 		
 		assertEquals(1L, total, 0.000000);
+	}
+	
+	@Test
+	public void deveRetornarLeiloesNaoEncerradosNulo() {
+		Usuario usuario = new Usuario("Mauricio", "teste");
+		Leilao encerrado = new Leilao("geladeira", 1500.0, usuario, false);
+		Leilao encerrado2 = new Leilao("XBOOX", 700.0, usuario, false);
+		encerrado.encerra();
+		encerrado2.encerra();
+		
+		leilaoDao.salvar(encerrado);
+		leilaoDao.salvar(encerrado2);
+		
+		Long total = leilaoDao.total();
+		
+		assertEquals(0L, total, 0.00000);
+	}
+	
+	
+	@Test
+	public void deveRetornarUmLeilaoComUsado() {
+		Usuario usuario = new Usuario("DOIDO", "Teste");
+		Leilao usado = new Leilao("gela",110.0,usuario,true);
+		Leilao naoUsado = new Leilao("gela",110.0,usuario,false);
+		
+		leilaoDao.salvar(usado);
+		leilaoDao.salvar(naoUsado);
+		
+		List<Leilao> novos = leilaoDao.novos();
+
+		assertEquals(1, novos.size());
+		assertEquals("gela", novos.get(0).getNome());
+		
+	}
+	
+	
+	public void deveRetornarLeiloesDeUmaSemanaAtras() {
+		
+		Usuario usuario = new Usuario("teste", "teste");
+		Leilao leilao = new Leilao("seila", 100.0, usuario, false);
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.DATE, -10);
+		leilao.setDataAbertura(c);
+		
+		Leilao leilao2 = new Leilao("seila", 100.0, usuario, false);
+		leilao2.setDataAbertura(Calendar.getInstance());
+		leilaoDao.salvar(leilao);
+		leilaoDao.salvar(leilao2);
+		
+		List<Leilao> antigos = leilaoDao.antigos();
+		assertEquals(1L, antigos.size());
+		assertEquals("seila", antigos.get(0).getNome());
+	}
+	
+	public void deveRetornarLeiloesDeSeteDiasAtras() {
+		
+		Usuario usuario = new Usuario("teste", "teste");
+		Leilao leilao = new Leilao("seila", 100.0, usuario, false);
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.DATE, -7);
+		leilao.setDataAbertura(c);
+		
+
+		leilaoDao.salvar(leilao);
+
+		
+		List<Leilao> antigos = leilaoDao.antigos();
+		
+		assertEquals(1, antigos.size());
+		assertEquals("teste", antigos.get(0).getNome());
+		
 	}
 
 }
