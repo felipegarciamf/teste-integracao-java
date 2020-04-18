@@ -1,6 +1,7 @@
 package br.com.caelum.pm73.dao;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.util.Calendar;
 import java.util.List;
@@ -277,6 +278,24 @@ public class LeilaoDaoTest {
 		System.out.println(valorInicialMedioDoUsuario);
 		assertEquals(1750, valorInicialMedioDoUsuario, 0.001);
 
+	}
+	
+	@Test
+	public void deveRetornarNuloSenaoEncontrarOLeilao() {
+		
+		Usuario usuario = new Usuario("teste", "teste");
+		
+		Leilao leilao = leilaoBuilder.comDono(usuario).constroi();
+		
+		usuarioDao.salvar(usuario);
+		leilaoDao.salvar(leilao);
+		
+		session.flush();
+		
+		leilaoDao.deleta(leilao);
+		
+		assertNull(leilaoDao.porId(leilao.getId()));
+		
 	}
 
 }

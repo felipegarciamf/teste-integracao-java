@@ -23,7 +23,7 @@ public class UsuarioDaoTest {
 		usuarioDao = new UsuarioDao(session);
 		session.beginTransaction();
 	}
-	
+
 	@After
 	public void depois() {
 		session.getTransaction().rollback();
@@ -52,7 +52,7 @@ public class UsuarioDaoTest {
 
 	private void Mockito(Class<Session> class1) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Test
@@ -66,7 +66,6 @@ public class UsuarioDaoTest {
 		assertEquals("Joao da Silva", usuario.getNome());
 		assertEquals("joaodasilva@teste.com", usuario.getEmail());
 
-		
 	}
 
 	@Test
@@ -75,9 +74,22 @@ public class UsuarioDaoTest {
 		UsuarioDao usuarioDao = new UsuarioDao(session);
 
 		Usuario usuarioBanco = usuarioDao.porNomeEEmail("teste", "nao vai vir");
-
 		assertNull(usuarioBanco);
+	}
 	
+	
+	@Test
+	public void deveDeletarUmUsuario() {
+		
+		Usuario usuario = new Usuario("teste12", "teste");
+		usuarioDao.salvar(usuario);
+		usuarioDao.deletar(usuario);
+		
+		session.flush();
+		session.clear();
+		
+		Usuario deletado = usuarioDao.porNomeEEmail("teste12", "teste");
+		assertNull(deletado);
 	}
 
 }
