@@ -20,6 +20,13 @@ public class Lance {
 	private Leilao leilao;
 	
 	protected Lance() {}
+	
+	public Lance(Calendar data, Usuario usuario, double valor) {
+		this.usuario = usuario;
+		this.data = data;
+		this.valor = valor;
+	}
+	
 	public Lance(Calendar data, Usuario usuario, double valor, Leilao leilao) {
 		this.usuario = usuario;
 		this.data = data;
