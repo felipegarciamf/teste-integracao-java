@@ -297,5 +297,7 @@ public class LeilaoDaoTest {
 		assertNull(leilaoDao.porId(leilao.getId()));
 		
 	}
+	
+	
 
 }
